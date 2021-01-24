@@ -1,3 +1,14 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Basic OCR WebApp | Shubham and Ayush</title>
+</head>
+<body>
+
 <label for="recognition-image-input">Choose image</label>
 <input type="file" accept="image/jpeg, image/png" id="recognition-image-input" /><br />
 <label for="recognition-confidence-input">Confidence</label>
@@ -9,3 +20,36 @@
   <div id="original-image"></div>
   <div id="labeled-image"></div>
 </div>
+
+<button type="button" onclick="runFunc()">Scan!</button>
+
+</body>
+
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@2.1.1/dist/tesseract.min.js"></script>
+<script>
+    function runFunc() {
+        var imageURL = document.getElementById("recognition-image-input").value;
+        console.log(imageURL);
+        const worker = Tesseract.createWorker({
+        logger: m => console.log(m)
+        });
+        Tesseract.setLogging(true);
+        work();
+
+        async function work() {
+        await worker.load();
+        await worker.loadLanguage('eng');
+        await worker.initialize('eng');
+
+        let result = await worker.detect(imageURL);
+        console.log(result.data);
+
+        result = await worker.recognize(imageURL);
+        console.log(result.data);
+
+        await worker.terminate();
+    }
+    
+    }
+</script>
+</html>
